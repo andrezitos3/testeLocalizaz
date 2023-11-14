@@ -1,0 +1,26 @@
+# Arquivos temporários
+**/*.tmp
+**/*.log
+
+# Diretórios
+nbproject/private/
+build/
+dist/
+test/
+target/test-classes/
+
+# Arquivos de compilação e configuração
+*.class
+*.jar
+*.war
+*.ear
+nb-configuration.xml
+nbactions.xml
+
+# Arquivos específicos do NetBeans
+.nb-gradle/
+build/
+nbbuild/
+nbdist/
+nbactions.xml
+nb-configuration.xml
