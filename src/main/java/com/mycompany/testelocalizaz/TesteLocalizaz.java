@@ -14,6 +14,38 @@ public class TesteLocalizaz {
     }
     
     public static void testeEstado(WebDriver driverParam) throws InterruptedException {
+        // criando array de estados
+        // 28 opcoes
+        String[][] estados = {
+                {"Selecione um Estado", "", ""},
+                {"Acre", "AC", "12"},
+                {"Alagoas", "AL", "27"},
+                {"Amapá", "AP", "16"},
+                {"Amazonas", "AM", "13"},
+                {"Bahia", "BA", "29"},
+                {"Ceará", "CE", "23"},
+                {"Distrito Federal", "DF", "53"},
+                {"Espírito Santo", "ES", "32"},
+                {"Goiás", "GO", "52"},
+                {"Maranhão", "MA", "21"},
+                {"Mato Grosso", "MT", "51"},
+                {"Mato Grosso do Sul", "MS", "50"},
+                {"Minas Gerais", "MG", "31"},
+                {"Pará", "PA", "15"},
+                {"Paraíba", "PB", "25"},
+                {"Paraná", "PR", "41"},
+                {"Pernambuco", "PE", "26"},
+                {"Piauí", "PI", "22"},
+                {"Rio Grande do Norte", "RN", "24"},
+                {"Rio Grande do Sul", "RS", "43"},
+                {"Rio de Janeiro", "RJ", "33"},
+                {"Rondônia", "RO", "11"},
+                {"Roraima", "RR", "14"},
+                {"Santa Catarina", "SC", "42"},
+                {"São Paulo", "SP", "35"},
+                {"Sergipe", "SE", "28"},
+                {"Tocantins", "TO", "17"}
+        };
         // Encontrar o botão por ID < select > 
         WebElement botaoEstado = driverParam.findElement(By.id("estado_sb"));
         WebElement outputEstado = driverParam.findElement(By.id("ibge_estado_input"));
@@ -22,9 +54,16 @@ public class TesteLocalizaz {
         Select selectEstado = new Select(botaoEstado);
         // Ou selecionar uma opção pelo índice
          //selectEstado.selectByIndex(0);
-         for (int i = 1; i < 28; i++){
+         for (int i = 1; i < estados.length; i++){
+             boolean confirmaCodigo = false;
              selectEstado.selectByIndex(i);
              String codigoIbgeEstado = outputEstado.getText();
+             for (String[] estado : estados) {
+             System.out.println("Nome: " + estado[0] + ", Sigla: " + estado[1] + ", Código IBGE: " + estado[2]);
+             if (codigoIbgeEstado == estado[2]){
+                 confirmaCodigo = true;
+             }
+        }
              timeout();
          }
     }
