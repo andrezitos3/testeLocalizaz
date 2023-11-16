@@ -8,15 +8,9 @@ import java.time.Duration;
 import org.openqa.selenium.support.ui.Select;
 
 public class TesteLocalizaz {
-    
-    public static void timeout() throws InterruptedException {
-        Thread.sleep(1000);
-    }
-    
-    public static void testeEstado(WebDriver driverParam) throws InterruptedException {
-        // criando array de estados
-        // 28 opcoes
-        String[][] estados = {
+    // criando array de estados
+    // 28 opcoes
+    static String[][] estados = {
                 {"Selecione um Estado", "", ""},
                 {"Acre", "AC", "12"},
                 {"Alagoas", "AL", "27"},
@@ -46,6 +40,12 @@ public class TesteLocalizaz {
                 {"Sergipe", "SE", "28"},
                 {"Tocantins", "TO", "17"}
         };
+    public static void timeout() throws InterruptedException {
+        Thread.sleep(1000);
+    }
+    
+    public static void interacaoEstado(WebDriver driverParam) throws InterruptedException {
+        
         // Encontrar o botão por ID < select > 
         WebElement botaoEstado = driverParam.findElement(By.id("estado_sb"));
         WebElement outputEstado = driverParam.findElement(By.id("ibge_estado_input"));
@@ -55,15 +55,17 @@ public class TesteLocalizaz {
         // Ou selecionar uma opção pelo índice
          //selectEstado.selectByIndex(0);
          for (int i = 1; i < estados.length; i++){
-             boolean confirmaCodigo = false;
              selectEstado.selectByIndex(i);
-             String codigoIbgeEstado = outputEstado.getText();
-             for (String[] estado : estados) {
-             System.out.println("Nome: " + estado[0] + ", Sigla: " + estado[1] + ", Código IBGE: " + estado[2]);
-             if (codigoIbgeEstado == estado[2]){
-                 confirmaCodigo = true;
-             }
-        }
+             
+             
+             
+             //String codigoIbgeEstado = outputEstado.getText();
+//             for (String[] estado : estados) {
+//             System.out.println("Nome: " + estado[0] + ", Sigla: " + estado[1] + ", Código IBGE: " + estado[2]);
+//                if (codigoIbgeEstado == estado[2]){
+//                    confirmaCodigo = true;
+//                 }
+//         }
              timeout();
          }
     }
@@ -79,7 +81,7 @@ public class TesteLocalizaz {
         // Abre o Google
         driver.get("https://artdsl.github.io/LocaliZAZ.js/");
         
-        testeEstado(driver);
+        interacaoEstado(driver);
         timeout();
         
         // Encerra o navegador
