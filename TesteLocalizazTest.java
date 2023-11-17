@@ -1,35 +1,44 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
+ */
 package com.mycompany.testelocalizaz;
 
-import org.junit.After;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Before;
+import org.junit.After;
 
+/**
+ *
+ * @author andre
+ */
 public class TesteLocalizazTest {
-
+    
     protected static WebDriver driver;
-
+    
+    public static void timeout() throws InterruptedException{
+        Thread.sleep(1000);
+    }
+    
+    // configurações do driver
+    
     @BeforeClass
     public static void setUpClass() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Pichau\\Documents\\chromedriver-win64\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\andre\\AppData\\Local\\Programs\\ChromeDriver\\chromedriver.exe");
         driver = new ChromeDriver();
     }
     
-    @Before
+     @Before
     public void setUp() {
-         // Navegar para a página com o seu select
         driver.get("https://artdsl.github.io/LocaliZAZ.js/");
     }
-
+    
     @After
     public void tearDown() {
         if (driver != null) {
             driver.quit();
         }
-    }
-    
-    public static void timeout() throws InterruptedException{
-        Thread.sleep(1000);
     }
 }
