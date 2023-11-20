@@ -1,0 +1,7 @@
+erros
+
+ao selecionar a primeira cidade a cada vez que troca de estado, o codigo ibge da cidade nao é retornado
+* ao selecionar distrito federal, não há nenhum retorno do codigo ibge de brasília, já que ela é a primeira e única cidade 
+
+ao selecionar vários estados e abrir a aba dos aeroportos, eles acumulam e as opções não são resetadas. há também a aparição de "undefineds"
+
