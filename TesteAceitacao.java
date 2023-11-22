@@ -65,16 +65,54 @@ public class TesteAceitacao extends TesteLocalizazTest {
             System.out.println("Estado: " + opcoesEstados.get(i).getText());
             if (aeroportos[i].length > 1) {
                 for (int j = 0; j <= aeroportos[i].length - 1; j++) {
-                   selectAeroporto.selectByValue(aeroportos[i][j][2]);
+                    selectAeroporto.selectByValue(aeroportos[i][j][2]);
                     //como funciona a matriz tridimensional: aeroportos[estado][seleciona a matriz dentro de cada estado][muda os itens de cada matriz selecionada]
-                    assertEquals(aeroportos[i][j][2],botaoAeroporto.getAttribute("value"));
+                    assertEquals(aeroportos[i][j][2], botaoAeroporto.getAttribute("value"));
                     System.out.println("matriz aeroporto: " + aeroportos[i][j][0]);
                 }
             } else {
                 selectAeroporto.selectByValue(aeroportos[i][0][2]);
-                assertEquals(aeroportos[i][0][2],botaoAeroporto.getAttribute("value"));
+                assertEquals(aeroportos[i][0][2], botaoAeroporto.getAttribute("value"));
                 System.out.println("matriz aeroporto: " + aeroportos[i][0][0]);
             }
+        }
+    }
+
+    @Test
+    public void testAeroportoCasoCidade() {
+        // Encontrar o elemento select
+        WebElement botaoEstado = driver.findElement(By.id("estado_sb"));
+        WebElement botaoCidade = driver.findElement(By.id("cidade_sb"));
+        WebElement botaoAeroporto = driver.findElement(By.id("iata_input"));
+
+        // Criar um objeto Select a partir do elemento (botaoEstado)
+        Select selectEstado = new Select(botaoEstado);
+        Select selectCidade = new Select(botaoCidade);
+        Select selectAeroporto = new Select(botaoAeroporto);
+
+        List<WebElement> opcoesEstados = selectEstado.getOptions();
+        for (int i = 0; i < opcoesEstados.size(); i++) {
+            selectEstado.selectByIndex(i);
+            System.out.println("Estado: " + opcoesEstados.get(i).getText());
+
+            List<WebElement> opcoesCidades = selectCidade.getOptions();
+
+            //algoritmo de busca tipo bolha ou alguma coisa assim pq DESSA vez a gente vai ter que pesquisar a cidade exata que tem aeroporto e dar um jeito de colocar
+            //esse if do aeroportos[i] no meio ainda
+
+                if (aeroportos[i].length > 1) {
+                    for (int k = 0; k <= aeroportos[i].length - 1; k++) {
+                        selectAeroporto.selectByValue(aeroportos[i][k][2]);
+                        //como funciona a matriz tridimensional: aeroportos[estado][seleciona a matriz dentro de cada estado][muda os itens de cada matriz selecionada]
+                        assertEquals(aeroportos[i][k][2], botaoAeroporto.getAttribute("value"));
+                        System.out.println("matriz aeroporto: " + aeroportos[i][k][0]);
+                    }
+                } else {
+                    selectAeroporto.selectByValue(aeroportos[i][0][2]);
+                    assertEquals(aeroportos[i][0][2], botaoAeroporto.getAttribute("value"));
+                    System.out.println("matriz aeroporto: " + aeroportos[i][0][0]);
+                }
+
         }
     }
 
@@ -91,11 +129,10 @@ public class TesteAceitacao extends TesteLocalizazTest {
         Select selectCidade = new Select(botaoCidade);
 
         List<WebElement> opcoesEstados = selectEstado.getOptions();
-
         for (int i = 0; i < opcoesEstados.size(); i++) {
             selectEstado.selectByIndex(i);
             List<WebElement> opcoesCidades = selectCidade.getOptions();
-            System.out.println("Estado: " + opcoesEstados.get(i).getText());
+            //   System.out.println("Estado: " + opcoesEstados.get(i).getText());
 
             for (int j = 0; j < opcoesCidades.size(); j++) {
                 selectCidade.selectByIndex(j);
