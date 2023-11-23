@@ -37,12 +37,40 @@ public class TesteAceitacao extends TesteLocalizazTest {
             String codigoIbgeEstado = inputEstado.getAttribute("value");
             System.out.println("Estado: " + option.getText());
             System.out.println("Codigo IBGE: " + codigoIbgeEstado);
+            //  verificar se o estado selecionado corresponde ao estado certo da variável de dados
             assertEquals(estados[contador][0], option.getText());
+            // verificar se o código ibge do estado selecionado corresponde ao código ibge da variável de dados
             assertEquals(estados[contador][2], codigoIbgeEstado);
             contador++;
            // timeout();
             }
         }
+    
+    @Test // é pra dar errado (ele não atualiza a lista dos aeroportos a cada vez que troca de estado)
+    public void testAeroportoListaEstado(){
+        // Encontrar o elemento select
+        WebElement botaoEstado = driver.findElement(By.id("estado_sb"));
+        WebElement botaoAeroporto = driver.findElement(By.id("iata_input"));
+
+        // Criar um objeto Select a partir do elemento (botaoEstado)
+        Select selectEstado = new Select(botaoEstado);
+        Select selectAeroporto = new Select(botaoAeroporto);
+
+        List<WebElement> opcoesEstados = selectEstado.getOptions();
+
+        for (int i = 1; i < opcoesEstados.size(); i++) {
+            selectEstado.selectByIndex(i);
+            List<WebElement> opcoesAeroportos = selectAeroporto.getOptions();
+            System.out.println("Estado: " + opcoesEstados.get(i).getText());
+            for (int j = 0; j < opcoesAeroportos.size(); j++){
+                // verificar se a lista dos aeroportos do estado correspondem aos aeroportos que tem dentro do estado selecionado
+                assertEquals(aeroportos[i][j][1] + " - " + aeroportos[i][j][2], opcoesAeroportos.get(j).getText());
+                System.out.println(aeroportos[i][j][1] + " - " + aeroportos[i][j][2]);
+                System.out.println(opcoesAeroportos.get(j).getText());
+            }
+        }
+    }
+    
     
     @Test
     public void testAeroportoCasoEstado() {
@@ -57,19 +85,23 @@ public class TesteAceitacao extends TesteLocalizazTest {
 
         List<WebElement> opcoesEstados = selectEstado.getOptions();
 
-        //O problema está aqui: ele não consegue selecionar o aeroporto do "selecione um estado"
+        //o laço começa no "Acre"
         for (int i = 1; i < opcoesEstados.size(); i++) {
             selectEstado.selectByIndex(i);
             System.out.println("Estado: " + opcoesEstados.get(i).getText());
+            // verificar se existe mais de um aeroporto no estado
             if (aeroportos[i].length > 1) {
                 for (int j = 0; j <= aeroportos[i].length - 1; j++) {
                    selectAeroporto.selectByValue(aeroportos[i][j][2]);
                     //como funciona a matriz tridimensional: aeroportos[estado][seleciona a matriz dentro de cada estado][muda os itens de cada matriz selecionada]
+                    // 
+                    // verificar se a sigla do aeroporto selecionado corresponde a mesma sigla do aeroporto da variável de dados dos aeroportos
                     assertEquals(aeroportos[i][j][2],botaoAeroporto.getAttribute("value"));
                     System.out.println("matriz aeroporto: " + aeroportos[i][j][0]);
                 }
             } else {
                 selectAeroporto.selectByValue(aeroportos[i][0][2]);
+                // verificar se a sigla do aeroporto selecionado corresponde a mesma sigla do aeroporto da variável de dados dos aeroportos
                 assertEquals(aeroportos[i][0][2],botaoAeroporto.getAttribute("value"));
                 System.out.println("matriz aeroporto: " + aeroportos[i][0][0]);
             }
@@ -95,21 +127,25 @@ public class TesteAceitacao extends TesteLocalizazTest {
 
                 if (aeroportos[i].length > 1) {
                     for (int k = 0; k <= aeroportos[i].length - 1; k++) {
+                        // pegar a cidade de acordo com a variável de dados do aeroporto (o value é equivalente)
                         selectCidade.selectByValue(aeroportos[i][k][0]);
                         // MARANHAO ta errado 
-                        if (i == 10){
-                            assertEquals(aeroportos[10][0][2], "SLZ");
-                            assertEquals(aeroportos[10][1][2], "IMP");
-                        }
-                        else{
+//                        if (i == 10){
+//                            assertEquals(aeroportos[10][0][2], "SLZ");
+//                            assertEquals(aeroportos[10][1][2], "IMP");
+//                        }
+//                        else{
+
+                        // selecionando o aeroporto correspondente de acordo com a sigla dele no value
                         selectAeroporto.selectByValue(aeroportos[i][k][2]);
-                        //como funciona a matriz tridimensional: aeroportos[estado][seleciona a matriz dentro de cada estado][muda os itens de cada matriz selecionada]
+                        // verificar se o valor da option selecionada (sigla do aeroporto) é equivalente a sigla do aeroporto correspondente na variável de dados
                         assertEquals(aeroportos[i][k][2], botaoAeroporto.getAttribute("value"));
-                        System.out.println("matriz aeroporto: " + aeroportos[i][k][0]);}
+                        System.out.println("matriz aeroporto: " + aeroportos[i][k][0]);
                     }
                 } else {
                     selectCidade.selectByValue(aeroportos[i][0][0]);
                     selectAeroporto.selectByValue(aeroportos[i][0][2]);
+                    // verificar se o valor da option selecionada (sigla do aeroporto) é equivalente a sigla do aeroporto correspondente na variável de dados
                     assertEquals(aeroportos[i][0][2], botaoAeroporto.getAttribute("value"));
                     System.out.println("matriz aeroporto: " + aeroportos[i][0][0]);
                 }
@@ -149,7 +185,9 @@ public class TesteAceitacao extends TesteLocalizazTest {
                     codigoIbgeCidade = inputCidade.getAttribute("value");
                 }
                 System.out.println(codigoIbgeCidade);
+                // verificar se a cidade selecionada é a cidade correspondente na variável de dados
                 assertEquals(cidades[i][j], opcoesCidades.get(j).getText());
+                // verificar se o código ibge da cidade selecionada é o código equivalente na variável de dados dos códigos das cidades
                 assertEquals(cod_ibge_cidades[i][j], codigoIbgeCidade);
                 System.out.println("Cidade: " + opcoesCidades.get(j).getText());
             }
