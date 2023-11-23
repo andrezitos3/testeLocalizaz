@@ -58,7 +58,7 @@ public class TesteLocalizazTest {
     // lista dos aeroportos
        static String [][][] aeroportos  = {
             // 0.Aviso
-            {},
+            {{"","",""}},
             // 1.Acre
             {{"Rio Branco", "Aeroporto Internacional de Rio Branco", "RBR"}, {"Cruzeiro do Sul", "Aeroporto Internacional de Cruzeiro do Sul", "CZS"}},
             // 2.Alagoas
@@ -78,7 +78,7 @@ public class TesteLocalizazTest {
             // 9.Goiás
             {{"Goiânia", "Aeroporto de Goiânia", "GYN"}},
             // 10.Maranhão
-            {{"São Luis", "Aeroporto Internacional de São Luís", "SLZ"}, {"Imperatriz", "Aeroporto de Imperatriz", "IMP"}},
+            {{"São Luís", "Aeroporto Internacional de São Luís", "SLZ"}, {"Imperatriz", "Aeroporto de Imperatriz", "IMP"}},
             // 11.M. Grosso
             {{"Cuiabá", "Aeroporto Internacional de Cuiabá", "CGB"}},
             // 12.M.GR. SUL
@@ -99,7 +99,7 @@ public class TesteLocalizazTest {
             {{"Natal", "Aeroporto Internacional de Natal", "NAT"}},
             // 20.R.G Sul
             {{"Porto Alegre", "Aeroporto Internacional de Porto Alegre", "POA"}, {"Caxias do Sul", "Aeroporto Regional de Caxias do Sul", "CXJ"}},
-            // 21.R. Janeiro
+            // 21.R. Janeiro 
             {{"Ilha do Governador", "Aeroporto Internacional do Rio de Janeiro", "GIG"}, {"Rio de Janeiro", "Aerorporto Santos Dumont", "SDU"}, {"Cabo Frio", "Aeroporto Internacional de Cabo Frio", "CFB"}},
             // 22.Rondônia
             {{"Porto Velho", "Aeroporto Internacional de Porto Velho", "PVH"}},
