@@ -5,3 +5,9 @@ ao selecionar a primeira cidade a cada vez que troca de estado, o codigo ibge da
 
 ao selecionar vários estados e abrir a aba dos aeroportos, eles acumulam e as opções não são resetadas. há também a aparição de "undefineds"
 
+- no script js do site, o aeroporto de São Luís está sem acento e ele não retorna o aeroporto com essa cidade selecionada
+o botão select não possui NADA nesse caso. a option do aeroporto NÃO EXISTE no html.
+
+- nao existe ilha do governador nas options do select das cidades do Rio de Janeiro, portanto não há como retornar o aeroporto internacional do Rio de Janeiro.
+
+
