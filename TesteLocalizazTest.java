@@ -4,12 +4,17 @@
  */
 package com.mycompany.testelocalizaz;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.junit.BeforeClass;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.AfterClass;
+import io.restassured.RestAssured;
+import io.restassured.config.ObjectMapperConfig;
+import io.restassured.config.RestAssuredConfig;
 
 /**
  *
@@ -127,6 +132,12 @@ public class TesteLocalizazTest {
      @Before
     public void setUp() {
         driver.get("https://artdsl.github.io/LocaliZAZ.js/");
+        // Configurar a URL base da API ViaCEP
+        RestAssured.config = RestAssuredConfig.config()
+                .objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
+                        (cls, charset) -> new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                ));
+        RestAssured.baseURI = "https://viacep.com.br/ws";
     }
     
     @AfterClass

@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import io.restassured.RestAssured;
+import static io.restassured.RestAssured.given;
 
 /**
  *
@@ -127,7 +129,7 @@ public class TesteAceitacao extends TesteLocalizazTest {
 
                 if (aeroportos[i].length > 1) {
                     for (int k = 0; k <= aeroportos[i].length - 1; k++) {
-                        // pegar a cidade de acordo com a variável de dados do aeroporto (o value é equivalente)
+                        // pegar a cidade de acordo com a variável de dados do aeroporto
                         selectCidade.selectByValue(aeroportos[i][k][0]);
                         // MARANHAO ta errado 
 //                        if (i == 10){
@@ -151,6 +153,32 @@ public class TesteAceitacao extends TesteLocalizazTest {
                 }
         }
     }
+    
+    @Test
+    public void testConsultaCep(){
+        // Especificar o CEP a ser consultado
+        String cep = "01001000"; // CEP da Praça da Sé, em São Paulo
+
+        // Realizar a chamada de API GET para o CEP especificado
+        ViaCEPResponse response = given()
+                .when()
+                .get("/{cep}/json", cep)
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(ViaCEPResponse.class);
+
+        // Verificar se os dados do endereço são os esperados
+        System.out.println(response.getUf());
+        System.out.println(response.getLocalidade());
+        System.out.println(response.getBairro());
+        System.out.println(response.getLogradouro());
+        assertEquals("SP", response.getUf());
+        assertEquals("São Paulo", response.getLocalidade());
+        assertEquals("Sé", response.getBairro());
+        assertEquals("Praça da Sé", response.getLogradouro());
+    }
+    
     
     @Test
     public void testCidades() throws InterruptedException{
