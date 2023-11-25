@@ -24,10 +24,6 @@ public class TesteLocalizazTest {
     
     protected static WebDriver driver;
     
-    public static void timeout() throws InterruptedException{
-        Thread.sleep(1000);
-    }
-    
     //CÓDIGOS IBGE MUNICÍPIOS[3000+]
        static String[][] cod_ibge_cidades = {
                 {""},
@@ -132,11 +128,11 @@ public class TesteLocalizazTest {
      @Before
     public void setUp() {
         driver.get("https://artdsl.github.io/LocaliZAZ.js/");
-        // Configurar a URL base da API ViaCEP
         RestAssured.config = RestAssuredConfig.config()
                 .objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
                         (cls, charset) -> new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 ));
+        // Configurar a URL base da API ViaCEP
         RestAssured.baseURI = "https://viacep.com.br/ws";
     }
     

@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
+import org.openqa.selenium.Keys;
 
 /**
  *
@@ -20,7 +21,7 @@ import static io.restassured.RestAssured.given;
 public class TesteAceitacao extends TesteLocalizazTest {
     
     @Test
-    public void testEstados() throws InterruptedException{
+    public void testEstados(){
 
         // Encontrar o elemento select
         WebElement botaoEstado = driver.findElement(By.id("estado_sb"));
@@ -74,7 +75,7 @@ public class TesteAceitacao extends TesteLocalizazTest {
     }
     
     
-    @Test
+    @Test 
     public void testAeroportoCasoEstado() {
 
         // Encontrar o elemento select
@@ -110,7 +111,7 @@ public class TesteAceitacao extends TesteLocalizazTest {
         }
     }
     
-    @Test
+    @Test // esse aqui é pra dar errado tambem
     public void testAeroportoCasoCidade() {
         // Encontrar o elemento select
         WebElement botaoEstado = driver.findElement(By.id("estado_sb"));
@@ -131,7 +132,7 @@ public class TesteAceitacao extends TesteLocalizazTest {
                     for (int k = 0; k <= aeroportos[i].length - 1; k++) {
                         // pegar a cidade de acordo com a variável de dados do aeroporto
                         selectCidade.selectByValue(aeroportos[i][k][0]);
-                        // MARANHAO ta errado 
+                        // MARANHAO ta errado (se descomentar essa linha, o Ilha do Governador (RJ que da erro)
 //                        if (i == 10){
 //                            assertEquals(aeroportos[10][0][2], "SLZ");
 //                            assertEquals(aeroportos[10][1][2], "IMP");
@@ -142,7 +143,7 @@ public class TesteAceitacao extends TesteLocalizazTest {
                         selectAeroporto.selectByValue(aeroportos[i][k][2]);
                         // verificar se o valor da option selecionada (sigla do aeroporto) é equivalente a sigla do aeroporto correspondente na variável de dados
                         assertEquals(aeroportos[i][k][2], botaoAeroporto.getAttribute("value"));
-                        System.out.println("matriz aeroporto: " + aeroportos[i][k][0]);
+                        System.out.println("matriz aeroporto: " + aeroportos[i][k][0]); // }
                     }
                 } else {
                     selectCidade.selectByValue(aeroportos[i][0][0]);
@@ -155,10 +156,27 @@ public class TesteAceitacao extends TesteLocalizazTest {
     }
     
     @Test
-    public void testConsultaCep(){
-        // Especificar o CEP a ser consultado
-        String cep = "01001000"; // CEP da Praça da Sé, em São Paulo
+    public void testConsultaCep() {
+        WebElement botaoEstado = driver.findElement(By.id("estado_sb"));
+        WebElement botaoCidade = driver.findElement(By.id("cidade_sb"));
+        WebElement botaoAeroporto = driver.findElement(By.id("iata_input"));
+        WebElement botaoCep = driver.findElement(By.id("codpostal_input"));
+        WebElement inputEstado = driver.findElement(By.id("ibge_estado_input"));
+        WebElement inputCidade = driver.findElement(By.id("ibge_cidade_input"));
+        
+        
+        Select selectEstado = new Select(botaoEstado);
+        Select selectCidade = new Select(botaoCidade);
+        Select selectAeroporto = new Select(botaoAeroporto);
+        
+        
+        botaoCep.sendKeys("01155900");  // cep da Alameda Olga - Barra Funda
+         // Enviar a tecla Enter
+        botaoCep.sendKeys(Keys.RETURN);
 
+        // Especificar o CEP a ser consultado
+        String cep = botaoCep.getAttribute("value"); // cep da Alameda Olga - Barra Funda
+        
         // Realizar a chamada de API GET para o CEP especificado
         ViaCEPResponse response = given()
                 .when()
@@ -168,20 +186,60 @@ public class TesteAceitacao extends TesteLocalizazTest {
                 .extract()
                 .as(ViaCEPResponse.class);
 
+         // Localizar a div pelo ID (depois do Keys. return)
+        WebElement divBairroEndereco = driver.findElement(By.id("resultado_cep"));
+      
+        // Obter o texto da div
+        String textoDaDiv = divBairroEndereco.getText();
+        System.out.println(textoDaDiv);
+        System.out.println(textoDaDiv.length());
+        
+        // Encontrar o índice inicial e final do endereço
+        int inicioEndereco = textoDaDiv.indexOf("ENDEREÇO: ") + "ENDEREÇO: ".length();
+        int fimEndereco = textoDaDiv.indexOf("]", inicioEndereco);
+
+        // Encontrar o índice inicial e final do bairro
+        int inicioBairro = textoDaDiv.indexOf("BAIRRO: ") + "BAIRRO: ".length();
+        int fimBairro = textoDaDiv.indexOf("]", inicioBairro);
+
+        // Extrair os valores usando os índices
+        String endereco = textoDaDiv.substring(inicioEndereco, fimEndereco).trim();
+        String bairro = textoDaDiv.substring(inicioBairro, fimBairro).trim();
+        
+        System.out.println(endereco);
+        System.out.println(bairro);
+        
+        
         // Verificar se os dados do endereço são os esperados
         System.out.println(response.getUf());
         System.out.println(response.getLocalidade());
         System.out.println(response.getBairro());
         System.out.println(response.getLogradouro());
-        assertEquals("SP", response.getUf());
-        assertEquals("São Paulo", response.getLocalidade());
-        assertEquals("Sé", response.getBairro());
-        assertEquals("Praça da Sé", response.getLogradouro());
+        System.out.println(response.getIbge());
+        
+        
+        // verificar estado
+        assertEquals(response.getUf(),selectEstado.getFirstSelectedOption().getAttribute("value"));
+        // verificar cidade
+        assertEquals(response.getLocalidade(), selectCidade.getFirstSelectedOption().getAttribute("value"));
+        // verificar bairro
+        assertEquals(response.getBairro(), bairro);
+        // verificar rua
+        assertEquals(response.getLogradouro(), endereco);
+        // verificar codigo ibge estado
+        assertEquals(estados[25][2], inputEstado.getAttribute("value"));
+        // verificar codigo ibge cidade
+        assertEquals(response.getIbge(), inputCidade.getAttribute("value"));
+        
+        List<WebElement> opcoesAeroportos = selectAeroporto.getOptions();
+        if (opcoesAeroportos.size() > 0){
+            assertEquals(aeroportos[25][0][2],  selectAeroporto.getFirstSelectedOption().getAttribute("value"));
+        }
     }
     
-    
-    @Test
-    public void testCidades() throws InterruptedException{
+                // Distrito Federal não retorna o código IBGE de Brasília
+    @Test // Ilha do Governador simplesmente não existe na lista de municípios e na variável de dados de cidades  (portanto a lógica da certo)
+    public void testCidades() {
         
         // Encontrar o elemento select
         WebElement botaoEstado = driver.findElement(By.id("estado_sb"));

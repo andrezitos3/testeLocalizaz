@@ -31,6 +31,9 @@ class ViaCEPResponse {
         this.logradouro = logradouro;
     }
     
+    @JsonProperty("ibge")
+    private String ibge;
+    
     @JsonProperty("uf")
     private String uf;
 
@@ -43,7 +46,10 @@ class ViaCEPResponse {
     @JsonProperty("logradouro")
     private String logradouro;
     
-
+    public String getIbge() {
+        return ibge;
+    }
+    
     public String getUf() {
         return uf;
     }
